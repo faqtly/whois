@@ -25,12 +25,12 @@ async def gather_watchers(session: object):
     users   = []
     total_p = await fetch_pages_count(session)
 
-    # Creating tasks (issues)
+    # Creating tasks (watchers)
     for page_index in range(1, total_p + 1):
         params = {"state": "all", "page": page_index, "per_page": 100}
         tasks.append(create_task(github_request(session, '/subscribers', params=params)))
 
-    # Data acquisition and processing (issues)
+    # Data acquisition and processing (watchers)
     subscribers_list = [i for subscribers in await gather(*tasks) for i in subscribers]
     tasks.clear()
 

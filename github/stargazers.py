@@ -25,12 +25,12 @@ async def gather_stargazers(session: object):
     users   = []
     total_p = await fetch_pages_count(session)
 
-    # Creating tasks (issues)
+    # Creating tasks (stargazers)
     for page_index in range(1, total_p + 1):
         params = {"state": "all", "page": page_index, "per_page": 100}
         tasks.append(create_task(github_request(session, '/stargazers', params=params)))
 
-    # Data acquisition and processing (issues)
+    # Data acquisition and processing (stargazers)
     stargazers_list = [i for stargazers in await gather(*tasks) for i in stargazers]
     tasks.clear()
 
