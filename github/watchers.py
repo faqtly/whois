@@ -27,7 +27,7 @@ async def gather_watchers(session: object):
 
     # Creating tasks (watchers)
     for page_index in range(1, total_p + 1):
-        params = {"state": "all", "page": page_index, "per_page": 100}
+        params = {"page": page_index, "per_page": 100}
         tasks.append(create_task(github_request(session, '/subscribers', params=params)))
 
     # Data acquisition and processing (watchers)

@@ -27,7 +27,7 @@ async def gather_stargazers(session: object):
 
     # Creating tasks (stargazers)
     for page_index in range(1, total_p + 1):
-        params = {"state": "all", "page": page_index, "per_page": 100}
+        params = {"page": page_index, "per_page": 100}
         tasks.append(create_task(github_request(session, '/stargazers', params=params)))
 
     # Data acquisition and processing (stargazers)
