@@ -1,18 +1,19 @@
 from config  import GITHUB_TOKEN, GITHUB_REPO
-from github  import gather_info, gather_stargazers, gather_watchers, gather_contributors, gather_issues
-from aiohttp import ClientSession, TCPConnector
+from github  import (gather_info, gather_stargazers, gather_watchers, gather_contributors, gather_issues,
+                     fetch_api_stats, fetch_email)
+from aiohttp import ClientSession
 from asyncio import run, create_task, gather
 from json    import dump, load
 from os.path import exists
 from os      import makedirs
+from time    import sleep
 
-NAME = GITHUB_REPO[GITHUB_REPO.find("/") + 1:]
-PATH = fr'output/{NAME}'
-JSON = fr'{PATH}/{NAME}.json'
-CSV  = fr'{PATH}/{NAME}.csv'
+NAME = GITHUB_REPO[GITHUB_REPO.find("/") + 1:] # Repository name
+PATH = fr'output/{NAME}'                       # Repository local path
+JSON = fr'{PATH}/{NAME}.json'                  # Json path
 
 
-def write_to_file(file: str, text: dict or list):
+def write_to_json(file: str, text: dict or list):
     """
     Writing data to .json
     :param file: str: File name
@@ -23,7 +24,7 @@ def write_to_file(file: str, text: dict or list):
         dump(text, file, ensure_ascii=False, indent=4)
 
 
-def load_from_file(file: str):
+def load_from_json(file: str):
     """
     Reading data from .json
     :param file:   str: File name
@@ -31,6 +32,23 @@ def load_from_file(file: str):
     """
     with open(file, 'r', encoding='utf-8', newline='') as file:
         return load(file)
+
+
+def emails_count(user_list: dict):
+    """
+    The function counts the number of users whose emails could be found
+    :param user_list: dict: User list
+    :return:           str: Total users | Total emails
+    """
+    users = len(user_list)
+    count = 0
+
+    for user in user_list:
+        if user_list[user]['email'] is not None:
+            count += 1
+
+    return (f'Total users : {users}\n'
+            f'Total emails: {count}')
 
 
 async def users_urls_exists(session: object):
@@ -42,14 +60,29 @@ async def users_urls_exists(session: object):
     users = JSON.replace('.json', '_users.json')
 
     if exists(users):
-        return load_from_file(users)
+        return load_from_json(users)
 
     tasks = [create_task(gather_issues(session)), create_task(gather_stargazers(session)),
              create_task(gather_watchers(session)), create_task(gather_contributors(session))]
 
-    write_to_file(users, user_list := list(set([i for users in await gather(*tasks) for i in users])))
+    write_to_json(users, user_list := list(set([i for users in await gather(*tasks) for i in users])))
 
     return user_list
+
+
+async def users_data_exists(session: object):
+    """
+    The function checks if the list of users exists in the local storage
+    :param session: object: GitHub Session
+    :return:          dict: User list
+    """
+    if exists(JSON):
+        return load_from_json(JSON)
+
+    user_info = await create_task(gather_info(session, await users_urls_exists(session)))
+    write_to_json(JSON, user_info)
+
+    return user_info
 
 
 async def main():
@@ -65,16 +98,27 @@ async def main():
         'Accept': 'application/vnd.github.v3.raw'
     }
 
-    connector = TCPConnector(limit=25)
-    async with ClientSession(base_url=r'https://api.github.com', headers=headers, connector=connector) as session:
+    async with ClientSession(base_url=r'https://api.github.com', headers=headers) as session:
+        print(await fetch_api_stats(session), end='\n\n')
 
-        async with session.get('/rate_limit') as response:
-            response = await response.json()
-            print(response['resources']['core'])
+        user_list = await users_data_exists(session)
 
-        user_info = await gather_info(session, await users_urls_exists(session))
+        print(emails_count(user_list), 'Fetch data...', sep='\n\n', end='\n\n')
 
-        write_to_file(JSON, user_info)
+        for index, user in enumerate(user_list):
+            # Delay on every 20 users
+            if index + 1 % 20 == 0:
+                sleep(5)
+
+            url   = f'/users/{user}/repos'
+            email = user_list[user]['email']
+
+            if email is None:
+                user_list[user]['email'] = await fetch_email(session, user, url)
+
+        write_to_json(JSON, user_list)
+
+        print(emails_count(user_list), await fetch_api_stats(session), sep='\n\n', end='\n\n')
 
 
 if __name__ == '__main__':

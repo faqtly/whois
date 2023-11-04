@@ -3,9 +3,6 @@ from asyncio import create_task, gather
 from math    import ceil
 from re      import findall
 
-# Anonymous contributors
-anonymous = {}
-
 
 async def fetch_pages_count(session: object):
     """
@@ -14,7 +11,7 @@ async def fetch_pages_count(session: object):
     :param session: object: GitHub Session
     :return:           int: Number of pages
     """
-    response = await github_request(session, '/contributors', fr='headers', params={'per_page': 1, 'anon': 'true'})
+    response = await github_request(session, '/contributors', fr='headers', params={'per_page': 1})
 
     return ceil(int(findall(r'&page=([0-9]+)(?!.+&page)', response['Link'])[0]) / 100)
 
@@ -27,12 +24,11 @@ async def gather_contributors(session: object):
     """
     tasks   = []
     users   = []
-    emails  = []
     total_p = await fetch_pages_count(session)
 
     # Creating tasks (contributors)
     for page_index in range(1, total_p + 1):
-        params = {"anon": "true", "page": page_index, "per_page": 100}
+        params = {"page": page_index, "per_page": 100}
         tasks.append(create_task(github_request(session, '/contributors', params=params)))
 
     # Data acquisition and processing (contributors)
@@ -40,14 +36,6 @@ async def gather_contributors(session: object):
     tasks.clear()
 
     for contributor in contributors_list:
-        if contributor['type'] != 'Anonymous':
-            users.append(contributor['url'])
-        else:
-            if contributor['email'] not in emails:
-                anonymous[contributor['name']] = {'email'   : contributor['email'],
-                                                  'website' : None,
-                                                  'location': None}
-
-            emails.append(contributor['email'])
+        users.append(contributor['url'])
 
     return users
