@@ -1,9 +1,10 @@
 <div align="center">
-    <a href="https://github.com/faqtly/whois"><img src="https://github.com/faqtly/whois/assets/2182108/2f3460fd-382d-4524-b11a-31010430202b" alt="whois" /></a>
+    <a href="https://github.com/faqtly/whois"><img src="https://github.com/faqtly/whois/assets/2182108/792a9cbf-eca5-4111-bf05-7f81ebebf5ca" alt="whois" /></a>
 </div>
 
 <div align="center">
-    <a href="https://github.com/faqtly/whois/actions"><img src="https://img.shields.io/github/actions/workflow/status/faqtly/whois/tests.yml?branch=main&label=Tests&style=for-the-badge" alt="build status" /></a>
+<!--     <a href="https://github.com/faqtly/whois/actions"><img src="https://img.shields.io/github/actions/workflow/status/faqtly/whois/tests.yml?branch=main&label=Tests&style=for-the-badge" alt="build status" /></a> -->
+    <img src="https://img.shields.io/github/issues/faqtly/whois?style=for-the-badge" alt="open issues" />
     <img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge" alt="version" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/faqtly/whois?style=for-the-badge" alt="license" /></a>
 </div>
