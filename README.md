@@ -41,10 +41,65 @@ This list will be in JSON and/or CSV format, depending on the settings you've ch
 
 ## Quick Start
 
-Add here:
+## Access Token
+First of all, you need to create a [GitHub Access Token](https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens), with all permissions for repositories and users.
+
+## Download
+Clone the repository:
+```sh
+git@github.com:faqtly/whois.git
+```
+
+Install all requirements:
+```sh
+pip install -r requirements.txt
+```
+
+## Environment
+Now you need to set up the application configuration, specify the repository and your GitHub Access Token. You can either create your own .env file or use .env.example.
+
+*don't forget to remove .example :)
+
+Environment example:
+```env
+GITHUB_TOKEN=ghp_ef12hjAFHA1231haifa12l
+GITHUB_REPO=faqtly/whois
+```
+
+All done! Now you can launch the app!
+```sh
+python main.py
+```
+
+## Examples:
+After that an output folder will be generated, which will contain files with data obtained from your repository.
 
 ```sh
-$ hello --world
+\output
+    \repo
+        repo_users.json # List of all users(URLs)
+        repo.json       # End result
+        repo.csv        # End result
+```
+
+JSON example:
+```json
+{
+    "user123": {
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "website": "www.johndoe.com",
+        "location": null,
+        "company": null
+    },
+    "janesmth": {
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "website": null,
+        "location": "Los Angeles, USA",
+        "company": "XYZ Corporation"
+    }
+}
 ```
 
 ## Contributing
