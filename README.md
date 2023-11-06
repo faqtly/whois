@@ -41,13 +41,13 @@ This list will be in JSON and/or CSV format, depending on the settings you've ch
 
 ## Quick Start
 
-## Access Token
+### Access Token
 First of all, you need to create a [GitHub Access Token](https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens), with all permissions for repositories and users.
 
-## Download
+### Download
 Clone the repository:
 ```sh
-git@github.com:faqtly/whois.git
+git clone git@github.com:faqtly/whois.git
 ```
 
 Install all requirements:
@@ -55,14 +55,14 @@ Install all requirements:
 pip install -r requirements.txt
 ```
 
-## Environment
-Now you need to set up the application configuration, specify the repository and your GitHub Access Token. You can either create your own .env file or use .env.example.
+### Environment
+Now you need to set up the application configuration, specify the repository and your GitHub Access Token. You can either create your own `.env` file or use `.env.example`.
 
 *don't forget to remove .example :)
 
 Environment example:
 ```env
-GITHUB_TOKEN=ghp_ef12hjAFHA1231haifa12l
+GITHUB_TOKEN=ghp_exampleToken1234567890
 GITHUB_REPO=faqtly/whois
 ```
 
@@ -71,7 +71,7 @@ All done! Now you can launch the app!
 python main.py
 ```
 
-## Examples:
+### Examples:
 After that an output folder will be generated, which will contain files with data obtained from your repository.
 
 ```sh
