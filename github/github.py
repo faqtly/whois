@@ -2,28 +2,25 @@ from config   import GITHUB_REPO
 from datetime import datetime
 
 
-async def github_request(session: object, url: str, r_type: str = 'c_repo', fr: str = 'json', params: dict = None):
+async def github_request(session: object, url: str, rt: str = 'c_repo', fr: str = 'json', params: dict = None):
     """
     Function for sending requests to the GitHub API
     :param session: object: GitHub Session
     :param url:        str: Page URL
-    :param r_type:     str: None
+    :param rt:         str: Request type
     :param fr:         str: Format || json - request.json() || other - request.text()
     :param params:    dict: Request params
     :return:      dict|str: Response
     """
-    if r_type == 'c_repo':
+    if rt == 'c_repo':  # Main repository
         url = fr'/repos/{GITHUB_REPO}{url}'
 
     async with session.get(url, params=params) as response:
-        if fr == 'json':
-            response = await response.json()
 
-        if fr == 'headers':
-            response = response.headers
-
-        if fr == 'text':
-            response = await response.text()
+        match fr:
+            case 'json'   : response = await response.json()
+            case 'text'   : response = await response.text()
+            case 'headers': response = response.headers
 
     return response
 

@@ -22,9 +22,9 @@ async def gather_contributors(session: object):
     :param session: object: GitHub Session
     :return:          list: List of user URLs
     """
+    total_p = await fetch_pages_count(session)
     tasks   = []
     users   = []
-    total_p = await fetch_pages_count(session)
 
     # Creating tasks (contributors)
     for page_index in range(1, total_p + 1):
