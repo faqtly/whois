@@ -1,26 +1,49 @@
-from config  import GITHUB_TOKEN, GITHUB_REPO
 from github  import (gather_info, gather_stargazers, gather_watchers, gather_contributors, gather_issues,
                      fetch_api_stats, fetch_email)
+from config  import GITHUB_TOKEN, GITHUB_REPO
 from aiohttp import ClientSession
-from asyncio import run, create_task, gather
+from asyncio import run, create_task, gather, sleep
 from json    import dump, load
+from csv     import writer
 from os.path import exists
 from os      import makedirs
-from time    import sleep
 
 NAME = GITHUB_REPO[GITHUB_REPO.find("/") + 1:] # Repository name
 PATH = fr'output/{NAME}'                       # Repository local path
 JSON = fr'{PATH}/{NAME}.json'                  # Json path
+CSV  = fr'{PATH}/{NAME}.csv'                   # Csv  path
 
 
-def write_to_json(file: str, text: dict or list):
+def write_to_csv(path: str, text: dict):
     """
-    Writing data to .json
-    :param file: str: File name
+    Writing data to .csv
+    :param path: str: File name
     :param text: str: Text to write
     :return:          None
     """
-    with open(file, 'w', encoding='utf-8', newline='') as file:
+    with open(path, 'w', encoding='utf-8', newline='') as file:
+        csv_writer = writer(file, delimiter=',')
+
+        csv_writer.writerow(['username', 'name', 'email', 'company', 'location', 'website'])
+
+        for user in text:
+            name     = text[user]['name']     if text[user]['name']     is not None else 'null'
+            email    = text[user]['email']    if text[user]['email']    is not None else 'null'
+            company  = text[user]['company']  if text[user]['company']  is not None else 'null'
+            location = text[user]['location'] if text[user]['location'] is not None else 'null'
+            website  = text[user]['website']  if text[user]['website']  is not None else 'null'
+
+            csv_writer.writerow([user, name, email, company, location, website])
+
+
+def write_to_json(path: str, text: dict or list):
+    """
+    Writing data to .json
+    :param path: str: File name
+    :param text: str: Text to write
+    :return:          None
+    """
+    with open(path, 'w', encoding='utf-8', newline='') as file:
         dump(text, file, ensure_ascii=False, indent=4)
 
 
@@ -105,18 +128,21 @@ async def main():
 
         print(emails_count(user_list), 'Fetch data...', sep='\n\n', end='\n\n')
 
-        for index, user in enumerate(user_list):
-            # Delay on every 20 users
-            if index + 1 % 20 == 0:
-                sleep(5)
+        counter = 0
+        for user in user_list:
+            if counter == 20:  # Delay on every 20 users
+                await sleep(5)
+                counter = 0
 
             url   = f'/users/{user}/repos'
             email = user_list[user]['email']
 
             if email is None:
                 user_list[user]['email'] = await fetch_email(session, user, url)
+                counter += 1
 
         write_to_json(JSON, user_list)
+        write_to_csv(CSV, user_list)
 
         print(emails_count(user_list), await fetch_api_stats(session), sep='\n\n', end='\n\n')
 
