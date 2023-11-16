@@ -5,7 +5,7 @@
 <div align="center">
 <!--     <a href="https://github.com/faqtly/whois/actions"><img src="https://img.shields.io/github/actions/workflow/status/faqtly/whois/tests.yml?branch=main&label=Tests&style=for-the-badge" alt="build status" /></a> -->
     <img src="https://img.shields.io/github/issues/faqtly/whois?style=for-the-badge" alt="open issues" />
-    <img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge" alt="version" /></a>
+    <img src="https://img.shields.io/badge/version-1.1.0-blue?style=for-the-badge" alt="version" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/faqtly/whois?style=for-the-badge" alt="license" /></a>
 </div>
 
