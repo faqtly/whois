@@ -1,5 +1,5 @@
 from github  import (gather_info, gather_stargazers, gather_watchers, gather_contributors, gather_issues,
-                     fetch_api_stats, fetch_email)
+                     fetch_api_stats, fetch_email, gather_forks)
 from config  import GITHUB_TOKEN, GITHUB_REPO
 from aiohttp import ClientSession
 from asyncio import run, create_task, gather, sleep
@@ -7,6 +7,8 @@ from json    import dump, load
 from csv     import writer
 from os.path import exists
 from os      import makedirs
+
+from pprint import pprint
 
 NAME = GITHUB_REPO[GITHUB_REPO.find("/") + 1:] # Repository name
 PATH = fr'output/{NAME}'                       # Repository local path
@@ -85,8 +87,11 @@ async def users_urls_exists(session: object):
     if exists(users):
         return load_from_json(users)
 
-    tasks = [create_task(gather_issues(session)), create_task(gather_stargazers(session)),
-             create_task(gather_watchers(session)), create_task(gather_contributors(session))]
+    tasks = [create_task(gather_issues(session)),
+             create_task(gather_stargazers(session)),
+             create_task(gather_watchers(session)),
+             create_task(gather_contributors(session)),
+             create_task(gather_forks(session))]
 
     write_to_json(users, user_list := list(set([i for users in await gather(*tasks) for i in users])))
 

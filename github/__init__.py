@@ -4,3 +4,4 @@ from github.stargazers   import gather_stargazers
 from github.watchers     import gather_watchers
 from github.contributors import gather_contributors
 from github.users        import gather_info, fetch_email
+from github.forks        import gather_forks, fetch_pages_count

@@ -55,15 +55,16 @@ async def gather_info(session: object, user_list: list):
 
     # Data acquisition and processing (users)
     for user in user_list:
-        user_login = user['login']
-        user_name  = user['name']
-        user_email = user['email']
-        user_cmp   = user['company']
+        if isinstance(user, dict):
+            user_login = user['login']
+            user_name = user['name']
+            user_email = user['email']
+            user_cmp = user['company']
 
-        users[user_login] = {'name'    : user_name,
-                             'email'   : user_email,
-                             'website' : user['blog'] if user['blog'] else None,
-                             'location': user['location'],
-                             'company' : user_cmp}
+            users[user_login] = {'name': user_name,
+                                 'email': user_email,
+                                 'website': user['blog'] if user['blog'] else None,
+                                 'location': user['location'],
+                                 'company': user_cmp}
 
     return users

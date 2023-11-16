@@ -17,6 +17,9 @@ async def github_request(session: object, url: str, rt: str = 'c_repo', fr: str 
 
     async with session.get(url, params=params) as response:
 
+        if response.status == 404:
+            return
+
         match fr:
             case 'json'   : response = await response.json()
             case 'text'   : response = await response.text()
