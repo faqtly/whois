@@ -57,6 +57,7 @@ pip install -r requirements.txt
 
 ### Environment
 Now you need to set up the application configuration, specify the repository and your GitHub Access Token. You can either create your own `.env` file or use `.env.example`.
+Be sure to specify the number of repositories to be checked for each user. The higher the value, the better the result. It is recommended to set the value in the range of 5-10.
 
 *don't forget to remove .example :)
 
@@ -64,6 +65,7 @@ Environment example:
 ```env
 GITHUB_TOKEN=ghp_exampleToken1234567890
 GITHUB_REPO=faqtly/whois
+REPOS_COUNT=5
 ```
 
 All done! Now you can launch the app!
