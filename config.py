@@ -27,5 +27,19 @@ def github_repo():
     return repo
 
 
+def repos_count():
+    """
+    Repositories Count Validation
+    :return: int: count
+    """
+    count = int(config('REPOS_COUNT'))
+
+    if not isinstance(count, int) or not count:
+        raise Exception('Invalid or missing REPOS_COUNT in the .env file')
+
+    return count
+
+
 GITHUB_TOKEN = github_token()
 GITHUB_REPO  = github_repo()
+REPOS_COUNT  = repos_count()

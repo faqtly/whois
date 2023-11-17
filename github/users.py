@@ -1,3 +1,4 @@
+from config  import REPOS_COUNT
 from github  import github_request
 from asyncio import gather, create_task
 
@@ -11,7 +12,6 @@ async def fetch_email(session: object, login: str, url: str):
     :param url:        str: User repos URL
     :return:          dict: User_email
     """
-    repo_count = 5  # Maximum number of repositories to be checked
     params     = {'per_page': 100, 'sort': 'pushed'}
     repository = [i for i in await github_request(session, url, params=params, rt='user')
                   if isinstance(i, dict) and i['fork'] is not True]
@@ -19,7 +19,7 @@ async def fetch_email(session: object, login: str, url: str):
     if not repository:
         return
 
-    for repo in range(repo_count):
+    for repo in range(REPOS_COUNT):
         if repo <= len(repository) - 1:
             params      = {'per_page': 100, 'author': login}
             commits_url = repository[repo]['commits_url'].replace(r'https://api.github.com', '').replace('{/sha}', '')
