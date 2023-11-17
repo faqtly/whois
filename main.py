@@ -8,7 +8,6 @@ from csv     import writer
 from os.path import exists
 from os      import makedirs
 
-from pprint import pprint
 
 NAME = GITHUB_REPO[GITHUB_REPO.find("/") + 1:] # Repository name
 PATH = fr'output/{NAME}'                       # Repository local path
