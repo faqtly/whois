@@ -19,7 +19,7 @@
   <sub>
     Built with love 
     &bull; Brought to you by <a href="https://github.com/hurfy">@hurfy</a>
-    and other <a href="https://github.com/zpl-c/librg/graphs/contributors">contributors</a>
+    and other <a href="https://github.com/faqtly/whois/graphs/contributors">contributors</a>
   </sub>
 </div>
 
